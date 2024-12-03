@@ -1,11 +1,3 @@
-import dynamic from "next/dynamic";
-
-const GreetingLottie = dynamic(() => import("./GreetingLottieComponent"), {
-  ssr: false,
-});
-
-export default GreetingLottie;
-
 // import React from "react";
 // import Lottie from "react-lottie";
 
@@ -29,3 +21,29 @@ export default GreetingLottie;
 // };
 
 // export default GreetingLottie;
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
+
+type DisplayLottieProps = {
+  animationPath: string;
+};
+
+const DisplayLottie = ({ animationPath }: DisplayLottieProps) => {
+  if (typeof window === "undefined") {
+    return null; // Render nothing on the server
+  }
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: require(`../animations/${animationPath}`),
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  return <Lottie options={defaultOptions} height={300} width={300} />;
+};
+
+export default DisplayLottie;
